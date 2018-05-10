@@ -167,13 +167,7 @@ class App
     {
         $namespace = str_replace('\\', '/', $namespace);
         $file = ROOT_PATH . "/app/$namespace.php";
-        var_dump($file);
-        if (file_exists($file)) {
-            include_once($file);
-            return true;
-        }
 
-        $file = ROOT_PATH . "/lib/$namespace.php";
         if (file_exists($file)) {
             include_once($file);
             return true;

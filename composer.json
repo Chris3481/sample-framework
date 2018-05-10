@@ -7,9 +7,10 @@
       "email": "christopherdubois3@gmail.com"
     }
   ],
+  "minimum-stability": "dev",
   "autoload": {
-    "psr-4": {
-      "App\\": "src/"
+    "psr-0": {
+      "App": "src/"
     }
   },
   "require": {
