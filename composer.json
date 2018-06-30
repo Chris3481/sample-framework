@@ -1,5 +1,6 @@
 {
   "name": "sample-framework",
+  "version": "1.0.0",
   "description": "Sample core framework",
   "authors": [
     {
@@ -7,13 +8,15 @@
       "email": "christopherdubois3@gmail.com"
     }
   ],
-  "minimum-stability": "dev",
   "autoload": {
     "psr-0": {
       "App": "src/"
     }
   },
-  "require": {
-    "predis/predis": "^1.1"
+  "require-": {
+    "predis/predis": "^1.1",
+    "doctrine/orm": "2.4.*",
+    "symfony/yaml": "2.*",
+    "symfony/console": "*"
   }
 }
