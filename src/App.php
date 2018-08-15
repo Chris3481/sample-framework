@@ -1,10 +1,11 @@
 <?php
 
-use App\Model\core\Exception as ExeptionHandler;
 use App\Model\core\Request;
 use App\Model\core\Layout;
 use App\Controller\AbstractController;
 use Predis\Client;
+use Symfony\Component\Console\Application;
+
 
 class App
 {
@@ -143,9 +144,9 @@ class App
         }
     }
 
-    public static function log($data)
+    public static function log($str)
     {
-        file_put_contents(ROOT_PATH . '/var/error.log', print_r($data, true) . "\n", FILE_APPEND);
+        file_put_contents(ROOT_PATH . '/var/error.log', print_r($str, true) . "\n", FILE_APPEND);
     }
 
     public static function getBaseUrl()
@@ -176,7 +177,7 @@ class App
         return false;
     }
 
-    public static function loadContent()
+    public static function run()
     {
         /** @var AbstractController $_controller */
         $_controller = self::getController();
@@ -185,15 +186,23 @@ class App
         return $_controller->$action();
     }
 
-    public static function run($output = true)
+    public static function runCommands()
     {
-        require(ROOT_PATH . '/vendor/autoload.php');
+        $application = new Application();
 
-        // Activate autoload
-        spl_autoload_register(array('self', 'load'));
+        $commands = require_once ROOT_PATH . '/config/commands.php';
 
-        set_exception_handler(array(ExeptionHandler::class, 'detection'));
+        foreach($commands as $command) {
+            $commandInstance = new $command();
+            $application->add($commandInstance);
+        }
 
-        if ($output) echo self::loadContent();
+        try {
+            $application->run();
+
+        } catch (\Exception $e){
+            echo $e->getMessage();
+        }
     }
+
 }

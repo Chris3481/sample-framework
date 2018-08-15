@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App;
+use App\Model\core\Exception as ExeptionHandler;
+
 class SampleFramework
 {
     private $directory;
@@ -18,10 +21,20 @@ class SampleFramework
         $this->directory = $baseDirectory;
         $this->prefix = __NAMESPACE__.'\\';
         $this->prefixLength = strlen($this->prefix);
+
+        // Activate autoload
+        spl_autoload_register(array(App::class, 'load'));
+
+        set_exception_handler(array(ExeptionHandler::class, 'detection'));
     }
 
     public function run()
     {
-        \App::run();
+        echo App::run();
+    }
+
+    public function runCommands()
+    {
+        App::runCommands();
     }
 }
