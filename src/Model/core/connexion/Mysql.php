@@ -2,31 +2,44 @@
 
 namespace App\Model\core\connexion;
 
+use App;
 use App\Model\core\AbstractModel;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
 
-class Mysql extends AbstractModel{
+class Mysql extends AbstractModel
+{
 
     protected $_connexion;
 
+
     public function __construct()
     {
-        $host = \App::getConfig('db/mysql/host');
-        $user = \App::getConfig('db/mysql/user');
-        $password = \App::getConfig('db/mysql/password');
-        $database = \App::getConfig('db/mysql/database');
-        $port = \App::getConfig('db/mysql/port', '3306');
+        $entitiesPath = array(
+            ROOT_PATH . '/app/Model'
+        );
+
+        $isDevMode = true;
+        $proxyDir = null;
+        $cache = null;
+        $useSimpleAnnotationReader = false;
+
+        $dbParams = App::getConfig('db/mysql');
+
+        $config = Setup::createAnnotationMetadataConfiguration($entitiesPath, $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
 
         try {
-            $this->_connexion = new \PDO("mysql:host=$host;port=$port;dbname=$database", $user, $password);
-            $this->_connexion->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'UTF8'");
-            $this->_connexion->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $pE) {
-            throw new \Exception('Error while connection to mysql database');
+            $this->_connexion = EntityManager::create($dbParams, $config);
+
+        } catch(ORMException $e) {
+            // @todo catch database connexion exception
         }
     }
 
     /**
-     * @return \PDO
+     * @return EntityManager
      */
     public function getConnexion()
     {

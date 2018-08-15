@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Model\core;
+use App;
 
 Abstract class AbstractModel
 {
@@ -17,7 +18,7 @@ Abstract class AbstractModel
 
     public function getConnexion()
     {
-        return \App::getAdapter()->getConnexion();
+        return App::getAdapter()->getConnexion();
     }
 
     public function __call($method, $args)
@@ -42,6 +43,7 @@ Abstract class AbstractModel
                 $key = $this->_underscore(substr($method,3));
                 return isset($this->_data[$key]);
         }
+
         throw new \Exception("Invalid method ".get_class($this)."::".$method."(".print_r($args,1).")");
     }
 
@@ -51,13 +53,14 @@ Abstract class AbstractModel
      * Retains previous data in the object.
      *
      * @param array $arr
-     * @return \Model\core\AbstractModel
+     * @return AbstractModel
      */
     public function addData(array $arr)
     {
         foreach($arr as $index=>$value) {
             $this->setData($index, $value);
         }
+
         return $this;
     }
 
@@ -70,7 +73,7 @@ Abstract class AbstractModel
      *
      * @param string|array $key
      * @param mixed $value
-     * @return \Model\core\AbstractModel
+     * @return AbstractModel
      */
     public function setData($key, $value=null)
     {
@@ -79,6 +82,7 @@ Abstract class AbstractModel
         } else {
             $this->_data[$key] = $value;
         }
+
         return $this;
     }
 
@@ -121,6 +125,7 @@ Abstract class AbstractModel
         if (isset($this->_data[$key])) {
             return $this->_data[$key];
         }
+
         return $default;
     }
 
@@ -130,7 +135,7 @@ Abstract class AbstractModel
      * $key can be a string only. Array will be ignored.
      *
      * @param string $key
-     * @return \Model\core\AbstractModel
+     * @return AbstractModel
      */
     public function unsetData($key=null)
     {
@@ -139,6 +144,7 @@ Abstract class AbstractModel
         } else {
             unset($this->_data[$key]);
         }
+
         return $this;
     }
 
@@ -154,7 +160,9 @@ Abstract class AbstractModel
             return self::$_underscoreCache[$name];
         }
         $result = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name));
+
         self::$_underscoreCache[$name] = $result;
+
         return $result;
     }
 

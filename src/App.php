@@ -96,6 +96,7 @@ class App
         try {
             $adapter = self::getModel('core/connexion/' . $type);
             self::$_dbAdapter[$type] = $adapter;
+
         } catch (Exception $e) {
             throw new Exception("Database adapter $type does not exist");
         }
@@ -190,7 +191,30 @@ class App
     {
         $application = new Application();
 
-        $commands = require_once ROOT_PATH . '/config/commands.php';
+        $userCommands = require_once ROOT_PATH . '/config/commands.php';
+
+        $ormCOmmands = array(
+            'Doctrine\DBAL\Tools\Console\Command\RunSqlCommand',
+            'Doctrine\DBAL\Tools\Console\Command\ImportCommand',
+
+            // ORM Commands
+            '\Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand',
+            'Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand',
+            'Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand',
+            'Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand',
+            'Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand',
+            'Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand',
+            'Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand',
+            'Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand',
+            'Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand',
+            'Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand',
+            'Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand',
+            'Doctrine\ORM\Tools\Console\Command\RunDqlCommand',
+            'Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand',
+            'Doctrine\ORM\Tools\Console\Command\InfoCommand'
+        );
+
+        $commands = array_merge($userCommands, $ormCOmmands);
 
         foreach($commands as $command) {
             $commandInstance = new $command();

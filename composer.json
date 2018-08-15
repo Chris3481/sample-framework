@@ -16,6 +16,8 @@
   "require": {
     "predis/predis": "^1.1",
     "doctrine/orm": "2.4.*",
+    "doctrine/persistence": "*",
+    "doctrine/annotations": "~1.5",
     "symfony/yaml": "2.*",
     "symfony/console": "*"
   }
